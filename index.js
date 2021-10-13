@@ -1,15 +1,23 @@
 const debug = require('debug')('app:startup');
 
+
+const mongoose = require('mongoose');
 const config = require('config');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const Joi = require('joi');
+
 const logger = require('./middleware/logger');
 const courses = require('./routes/courses');
 const genres = require('./routes/genres');
 const home = require('./routes/home');
 const express = require('express');
 const app = express();
+
+mongoose.connect('mongodb://localhost/vidly')
+    .then(()=> console.log('Connected to MongoDB....'))
+    .catch(err => console.error('Could not connect to MongoDB'));
+
+
 
 app.set('view engine', 'pug');
 app.set('views','./views');
@@ -24,9 +32,9 @@ app.use('/api/genres', genres);
 app.use('/', home);
 
 //configuration
-console.log('Application Name: ' + config.get('name'));
-console.log('Mail Server: ' + config.get('mail.host'));
-console.log('Mail Password: ' + config.get('mail.password'));
+// console.log('Application Name: ' + config.get('name'));
+// console.log('Mail Server: ' + config.get('mail.host'));
+// console.log('Mail Password: ' + config.get('mail.password'));
 
 if(app.get('env') === 'development'){
     app.use(morgan('tiny'));
