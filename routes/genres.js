@@ -1,21 +1,7 @@
-const Joi = require('joi');
-const mongoose = require('mongoose');
+
+const {Genre, validate} = require('../models/genre');
 const express = require('express');
 const router = express.Router();
-
-
-const genreSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 50
-    }
-});
-
-const Genre = mongoose.model('Genre', genreSchema);
-
-
 
 router.get('/',async (req,res)=>{
     const genres = await Genre.find().sort({name:1});
@@ -32,7 +18,7 @@ router.post('/', async (req, res)=>{
 
     console.log(req.body); 
 
-    const { error, value } = validateCource(req.body);
+    const { error, value } = validate(req.body);
 
     if(error){
        return res.status(404).send(error.details[0].message);
@@ -49,7 +35,7 @@ router.post('/', async (req, res)=>{
 
 router.put('/:id',async (req,res)=>{
 
-    const { error, value } = validateCource(req.body);
+    const { error, value } = validate(req.body);
 
      if(error){
        return res.status(404).send(error.details[0].message);
@@ -60,18 +46,19 @@ router.put('/:id',async (req,res)=>{
         const genre = await Genre.findByIdAndUpdate(req.params.id,{name: req.body.name},{
             new: true
         });
+        res.send(genre);
     }
     catch(err){
         res.send("can't find the id");
     }
     
 
-    if(!genre){
-        return res.status(404).send('The genre with the given ID was not found');
-    } 
+    // if(!genre){
+    //     return res.status(404).send('The genre with the given ID was not found');
+    // } 
   
 
-    res.send(genre);
+    
   
 });
 
@@ -82,12 +69,6 @@ router.delete('/:id', async (req,res)=>{
     res.send(genre);
 });
 
-function validateCource(genre){
-    const schema = {
-        name: Joi.string().min(3).required()
-    };
 
-    return Joi.validate(genre, schema);
-}
 
 module.exports = router;

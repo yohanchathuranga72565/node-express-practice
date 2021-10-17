@@ -9,6 +9,8 @@ const helmet = require('helmet');
 const logger = require('./middleware/logger');
 const courses = require('./routes/courses');
 const genres = require('./routes/genres');
+const movies = require('./routes/movies');
+const rentals = require('./routes/rentals');
 const customers = require('./routes/customers');
 const home = require('./routes/home');
 const express = require('express');
@@ -31,6 +33,8 @@ app.use(helmet());
 app.use('/api/courses', courses);
 app.use('/api/genres', genres);
 app.use('/api/customers', customers);
+app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
 app.use('/', home);
 
 //configuration
