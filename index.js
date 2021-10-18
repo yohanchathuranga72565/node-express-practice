@@ -1,6 +1,7 @@
 const debug = require('debug')('app:startup');
 
-
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 const config = require('config');
 const morgan = require('morgan');
